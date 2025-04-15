@@ -1,0 +1,36 @@
+.balance-positive {
+    color: green;
+    font-weight: bold;
+}
+.balance-negative {
+    color: red;
+    font-weight: bold;
+}
+.revenu-amount {
+    color: green;
+}
+.depense-amount {
+    color: red;
+}
+.transaction-card {
+    margin-bottom: 15px;
+    border-left: 5px solid #ccc;
+}
+.transaction-card.revenu {
+    border-left-color: green;
+}
+.transaction-card.depense {
+    border-left-color: red;
+}
+.filter-form {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+.summary-box {
+    padding: 20px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    background-color: #f8f9fa;
+}
