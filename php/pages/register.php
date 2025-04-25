@@ -2,6 +2,7 @@
   ob_start();
   session_start();
   require_once "../model/config.php";
+  require_once "../functions/user.php";
 
   if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $nom = trim($_POST["nom"]);
@@ -9,41 +10,23 @@
     $password = $_POST["password"];
     $confirmPassword = $_POST["confirm-password"];
 
-    $errors = [
-      'nom' => [],
-      'email' => [],
-      'password' => [],
-      'confirm-password' => [],
-      'general' => []
-    ];
+    $errors = [];
 
     if (empty($nom)) {
-      $errors['nom'][] = "Le nom est requis.";
+      $errors['nom'] = "Le nom est requis.";
     }
     if (!filter_var($email, FILTER_VALIDATE_EMAIL) || empty($email)) {
-      $errors['email'][] = "L'email est invalide.";
+      $errors['email'] = "L'email est invalide.";
     }
     if (strlen($password) < 8) {
-      $errors['password'][] = "Le mot de passe doit contenir au moins 8 caractères.";
+      $errors['password'] = "Le mot de passe doit contenir au moins 8 caractères.";
     }
     if ($password !== $confirmPassword) {
-      $errors['confirm-password'][] = "Les mots de passe ne correspondent pas.";
+      $errors['confirm-password'] = "Les mots de passe ne correspondent pas.";
     }
 
-    // Check if email already exists
-    try {
-      $queryCheckEmail = "SELECT COUNT(*) FROM `users` WHERE `email` = :email";
-      $stmtCheck = $pdo->prepare($queryCheckEmail);
-      $stmtCheck->bindParam(':email', $email);
-      $stmtCheck->execute();
-      if ($stmtCheck->fetchColumn() > 0) {
-        $errors['email'][] = "Cet email est déjà utilisé.";
-      }
-    } catch (PDOException $e) {
-      $errors['email'][] = "Erreur lors de la vérification de l'email : " . $e->getMessage();
-    }
+    $emailAvailable = checkEmailExists($pdo, $email, $errors);
 
-    // Check if there are any errors
     $hasErrors = false;
     foreach ($errors as $fieldErrors) {
       if (!empty($fieldErrors)) {
@@ -53,28 +36,20 @@
     }
 
     if (!$hasErrors) {
-      try {
-          $hashedPassword = password_hash($password, PASSWORD_ARGON2ID);
-
-          $queryRegister = "INSERT INTO `users` (`nom`, `email`, `password`) VALUES (:nom, :email, :password)";
-          $stmt = $pdo->prepare($queryRegister);
-          $stmt->bindParam(':nom', $nom);
-          $stmt->bindParam(':email', $email);
-          $stmt->bindParam(':password', $hashedPassword);
-
-          if ($stmt->execute()) {
-            header("Location: login.php");
-            exit;
-          } else {
-            $errorInfo = $stmt->errorInfo();
-            $errors['general'][] = "Erreur lors de l'inscription : " . $errorInfo[2];
-          }
-      } catch (PDOException $e) {
-        $errors['general'][] = "Erreur de base de données : " . $e->getMessage();
+      if ($emailAvailable && empty($errors)) {
+        $result = registerUser($pdo, $nom, $email, $password, $errors);
+        if ($result['success']) {
+          $success = true;
+          $_SESSION['user_id'] = $result['user_id'];
+          header("Location: login.php");
+          exit();
+        }
+        else {
+          $errors = $result['error'];
+        }
       }
     }
 
-    // Store errors for display
     $_SESSION['form_errors'] = $errors;
   }
 ?>
@@ -116,7 +91,7 @@
     <h2>Créer un compte</h2>
     <form method="POST">
       <label for="nom">Nom</label>
-      <input type="text" id="nom" name="nom" required>
+      <input type="text" id="nom" name="nom" value="<?php echo htmlspecialchars($nom ?? ''); ?>" required>
       <?php if (isset($_SESSION['form_errors']['nom']) && !empty($_SESSION['form_errors']['nom'])): ?>
         <?php foreach ($_SESSION['form_errors']['nom'] as $error): ?>
           <p class="error"><?php echo htmlspecialchars($error); ?></p>
@@ -167,8 +142,9 @@
   </footer>
 
   <?php
-    // Clear session data after rendering
-    unset($_SESSION['form_errors']);
+    if ($_SERVER["REQUEST_METHOD"] !== "POST") {
+      unset($_SESSION['form_errors']);
+    }
   ?>
 </body>
 </html>
