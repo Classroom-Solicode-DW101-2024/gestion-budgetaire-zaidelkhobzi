@@ -47,5 +47,11 @@
       <p>Pas encore de compte ? <a href="register.php">Créer un compte</a></p>
     </form>
   </div>
+
+  <footer>
+    <div class="container">
+      <p>&copy; <?php echo date("Y"); ?> - Application de gestion budgétaire. Tous droits réservés.</p>
+    </div>
+  </footer>
 </body>
 </html>
