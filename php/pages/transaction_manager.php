@@ -69,12 +69,14 @@
         <?php include "../templates/transactions/transactions_list.php"; ?>
 
         <!-- Add Transaction Modal -->
-        <?php include "../templates/modals/add_transaction_modal.php"; ?>
+        <?php include "../templates/transactions/add_transaction_modal.php"; ?>
         <!-- Edit Transaction Modal -->
-        <?php include "../templates/modals/edit_transaction_modal.php"; ?>
+        <?php include "../templates/transactions/edit_transaction_modal.php"; ?>
         <!-- Delete Transaction Modal -->
-        <?php include "../templates/modals/delete_transaction_modal.php"; ?>
+        <?php include "../templates/transactions/delete_transaction_modal.php"; ?>
     </div>
+
+    <?php include "../includes/footer.php" ?>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <script src="../../public/js/transaction_manager.js"></script>
