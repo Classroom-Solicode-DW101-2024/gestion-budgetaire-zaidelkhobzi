@@ -25,20 +25,20 @@ nav a {
 nav a:hover {
     text-decoration: underline;
 }
-.balance-positive {
+/* .balance-positive {
     color: green;
     font-weight: bold;
-}
-.balance-negative {
+} */
+/* .balance-negative {
     color: red;
     font-weight: bold;
-}
-.revenu-amount {
+} */
+/* .revenu-amount {
     color: green;
-}
-.depense-amount {
+} */
+/* .depense-amount {
     color: red;
-}
+} */
 .transaction-card {
     margin-bottom: 15px;
     border-left: 5px solid #ccc;
@@ -55,9 +55,34 @@ nav a:hover {
     border-radius: 5px;
     margin-bottom: 20px;
 }
-.summary-box {
+/* .summary-box {
     padding: 20px;
     border-radius: 5px;
     margin-bottom: 20px;
     background-color: #f8f9fa;
+} */
+.summary-box {
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.list-group-item {
+    background-color: transparent;
+    border: none;
+    padding: 10px 0;
+}
+.revenu-amount {
+    color: #28a745;
+}
+.depense-amount {
+    color: #dc3545;
+}
+.balance-positive {
+    color: #28a745;
+    font-weight: bold;
+}
+.balance-negative {
+    color: #dc3545;
+    font-weight: bold;
 }

@@ -25,10 +25,12 @@
   <meta charset="UTF-8">
   <title>Connexion</title>
   <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="../../css/register.css">
-  <link rel="stylesheet" href="../../css/global.css">
+  <link rel="stylesheet" href="../../public/css/register.css">
+  <link rel="stylesheet" href="../../public/css/global.css">
 </head>
 <body>
+  <?php include "../includes/header_login_register.php" ?>
+
   <div class="form-container">
     <h2>Connexion</h2>
     <?php if (isset($error)): ?>
